@@ -8,7 +8,6 @@ import {
 	DropdownLabel,
 	DropdownMenu,
 } from "@/components/catalyst/dropdown";
-import { Link } from "@/components/catalyst/link";
 import {
 	Navbar,
 	NavbarItem,
@@ -33,12 +32,14 @@ import {
 import {
 	ArrowTrendingUpIcon,
 	HomeIcon,
-	QuestionMarkCircleIcon,
-	SparklesIcon,
 	Square2StackIcon,
 	WrenchScrewdriverIcon,
 } from "@heroicons/react/20/solid";
 import { usePathname } from "next/navigation";
+
+import { DynamicWidget, useDynamicContext } from "@/lib/dynamic";
+import { useIsMounted } from "@/hooks/useIsMounted";
+import { Button } from "@/components/catalyst/button";
 
 function AccountDropdownMenu({
 	anchor,
@@ -59,6 +60,10 @@ export function ApplicationLayout({
 	children: React.ReactNode;
 }) {
 	const pathname = usePathname();
+	const { setShowAuthFlow, isAuthenticated } = useDynamicContext();
+	const isMounted = useIsMounted();
+
+	if (!isMounted) return;
 
 	return (
 		<SidebarLayout
@@ -114,6 +119,11 @@ export function ApplicationLayout({
 							<SidebarItem>
 								<Avatar src="/networks/starknet.png" />
 								<SidebarLabel>Starknet</SidebarLabel>
+								{isAuthenticated ? (
+									<DynamicWidget />
+								) : (
+									<Button onClick={() => setShowAuthFlow(true)}>Sign in</Button>
+								)}
 							</SidebarItem>
 						</SidebarSection>
 
