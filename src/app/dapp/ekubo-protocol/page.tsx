@@ -11,6 +11,9 @@ import { useEffect, useState } from "react";
 import { NoPositionFound, Position } from "./position";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { formatNumber } from "@/utils/format";
+import { createTitanAccount } from "@/lib/account/create";
+import toast from "react-hot-toast";
+import { fetchUserAction } from "@/actions/user";
 
 export interface IToken {
   decimals: number;
@@ -46,6 +49,10 @@ export default function Dapp() {
 
   const { primaryWallet } = useDynamicContext();
 
+  const [user, setUser] = useState<{
+    address: string;
+    tsa: string | null;
+  } | null>(null);
   const [tokens, setTokens] = useState<IToken[]>([]);
   const [metadatas, setMetadatas] = useState<IMetadata[]>([]);
   const [positions, setPositions] = useState<IPosition[]>([]);
@@ -57,10 +64,21 @@ export default function Dapp() {
       setTokens(data || []);
     };
 
-    const fetchMetadatas = async () => {
-      const response = await fetch(
-        `${EKUBO_BASE_URL}/positions/${primaryWallet?.address}`
-      );
+    const fetchUser = async () => {
+      const user = await fetchUserAction(primaryWallet!.address as string);
+      setUser(user);
+    };
+
+    const fetchData = async () => {
+      await Promise.all([fetchTokens(), fetchUser()]);
+    };
+
+    if (primaryWallet?.authenticated) fetchData();
+  }, [primaryWallet]);
+
+  useEffect(() => {
+    const fetchMetadatas = async (address: string) => {
+      const response = await fetch(`${EKUBO_BASE_URL}/positions/${address}`);
       const data = await response.json();
       const metadataUrls = data?.data.map(
         (position: { metadata_url: string }) => position.metadata_url
@@ -76,12 +94,8 @@ export default function Dapp() {
       setMetadatas(metadata);
     };
 
-    const fetchData = async () => {
-      await Promise.all([fetchTokens(), fetchMetadatas()]);
-    };
-
-    if (primaryWallet?.authenticated) fetchData();
-  }, [primaryWallet]);
+    if (user?.tsa) fetchMetadatas(user.tsa);
+  }, [user]);
 
   useEffect(() => {
     const updatePositions = async () => {
@@ -139,6 +153,22 @@ export default function Dapp() {
     (position) => position.isInRange
   ).length;
 
+  const handleTSAAccountCreation = async () => {
+    try {
+      if (!primaryWallet) {
+        toast.error("Please connect your wallet first");
+        return;
+      }
+      await createTitanAccount(primaryWallet);
+      toast.success("TSA Account created successfully");
+      const user = await fetchUserAction(primaryWallet!.address as string);
+      setUser(user);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to create TSA Account");
+    }
+  };
+
   return (
     <>
       <div className="flex justify-between items-center">
@@ -148,12 +178,26 @@ export default function Dapp() {
         </Heading>
 
         <div className="flex gap-2 items-center">
-          <Button outline className="!border-teal-600 !border-2">
+          <Button
+            disabled={!user?.tsa}
+            outline
+            className="!border-teal-600 !border-2"
+          >
             Import Position
           </Button>
-          <Button href={`/dapp/${slug}/create`} color="teal">
+          <Button
+            disabled={!user?.tsa}
+            onClick={() => redirect(`/dapp/${slug}/create`)}
+            color="teal"
+            className="disabled:!opacity-50"
+          >
             Create Position
           </Button>
+          {!user?.tsa && (
+            <Button color="teal" onClick={handleTSAAccountCreation}>
+              Create TSA Account
+            </Button>
+          )}
         </div>
       </div>
 

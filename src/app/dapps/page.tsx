@@ -25,7 +25,7 @@ function DApp({
       <div className="mt-6 flex items-center space-x-6">
         <Avatar src={logo} className="size-14" />
         <div className="text-3xl/8 font-semibold sm:text-2xl/8">{title}</div>
-        {isComingSoon && <Badge color="cyan">Coming Soon</Badge>}
+        {isComingSoon && <Badge>Coming Soon</Badge>}
       </div>
     </Link>
   );
