@@ -1,0 +1,1 @@
+export const EKUBO_BASE_URL="https://mainnet-api.ekubo.org"
