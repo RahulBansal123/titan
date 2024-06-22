@@ -3,8 +3,9 @@ import { Heading } from "@/components/catalyst/heading";
 import protocols from "@/data/protocols.json";
 import { redirect } from "next/navigation";
 import { EKUBO_BASE_URL } from "@/constants/ekubo";
+import { CreatePosition } from "./create-position";
 
-export default async function CreatePosition() {
+export default async function CreatePositionPage() {
   const slug = "ekubo-protocol";
   const protocol = protocols.find((protocol) => protocol.slug === slug);
   if (!protocol) redirect("/404");
@@ -14,7 +15,7 @@ export default async function CreatePosition() {
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="max-w-6xl flex justify-between items-center">
         <Heading>
           <Avatar src={protocol.logo} className="size-8 mr-2" />
           {protocol.title}

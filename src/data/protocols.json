@@ -3,18 +3,18 @@
     "title": "Ekubo Protocol",
     "logo": "https://pbs.twimg.com/profile_images/1676963409303322624/NuCcNNxa_400x400.png",
     "slug": "ekubo-protocol",
-    "isCommingSoon": false
+    "isComingSoon": false
   },
   {
     "title": "JediSwap",
     "logo": "https://pbs.twimg.com/profile_images/1487682615742459912/s1zdkTHF_400x400.jpg",
     "slug": "jediswap",
-    "isCommingSoon": true
+    "isComingSoon": true
   },
   {
     "title": "zkLend",
     "logo": "https://pbs.twimg.com/profile_images/1482917095105085441/09AI9lLr_400x400.png",
     "slug": "zklend",
-    "isCommingSoon": true
+    "isComingSoon": true
   }
 ]

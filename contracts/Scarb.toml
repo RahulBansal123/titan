@@ -13,3 +13,8 @@ ekubo = { git = "https://github.com/EkuboProtocol/abis" }
 [scripts]
 format = "scarb fmt"
 profile = "scarb --profile release build"
+
+[[target.starknet-contract]]
+sierra = true
+casm = true
+casm-add-pythonic-hints = true

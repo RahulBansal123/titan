@@ -1,5 +1,5 @@
 #[starknet::contract]
-mod TitanEkubo {
+mod StarkBot {
     use ekubo::components::clear::IClear;
     use core::traits::Into;
     use ekubo::types::i129::i129Trait;
