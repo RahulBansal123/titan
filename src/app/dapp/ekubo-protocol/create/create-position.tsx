@@ -164,7 +164,7 @@ export const CreatePosition = ({ tokens }: { tokens: IToken[] }) => {
 										onChange={(e) =>
 											handleChange(
 												"fromTokenAmount",
-												parseFloat(e.target.value),
+												Number.parseFloat(e.target.value),
 											)
 										}
 									/>
@@ -195,7 +195,10 @@ export const CreatePosition = ({ tokens }: { tokens: IToken[] }) => {
 										inputClassName="dark:!border-0 !py-0 !px-0 dark:!bg-transparent !outline-none sm:!text-xl/6"
 										value={state.toTokenAmount}
 										onChange={(e) =>
-											handleChange("toTokenAmount", parseFloat(e.target.value))
+											handleChange(
+												"toTokenAmount",
+												Number.parseFloat(e.target.value),
+											)
 										}
 									/>
 									<span className="text-sm/6 text-zinc-500">
