@@ -1,7 +1,7 @@
 import { EKUBO_NFT_CONTRACT_ADDRESS } from "@/constants/ekubo";
 import type { Wallet } from "@dynamic-labs/sdk-react-core";
 import type { StarknetWalletConnectorType } from "@dynamic-labs/starknet";
-import { Contract } from "starknet";
+import { type AccountInterface, Contract } from "starknet";
 
 export async function importPosition(
   wallet: Wallet,
@@ -23,7 +23,7 @@ export async function importPosition(
   const contract = new Contract(
     contractClass.abi,
     EKUBO_NFT_CONTRACT_ADDRESS,
-    signer
+    signer as AccountInterface
   );
 
   const { transaction_hash } = await contract.transferFrom(

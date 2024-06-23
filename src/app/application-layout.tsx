@@ -2,15 +2,7 @@
 
 import { Avatar } from "@/components/catalyst/avatar";
 import {
-  Dropdown,
-  DropdownButton,
-  DropdownItem,
-  DropdownLabel,
-  DropdownMenu,
-} from "@/components/catalyst/dropdown";
-import {
   Navbar,
-  NavbarItem,
   NavbarSection,
   NavbarSpacer,
 } from "@/components/catalyst/navbar";
@@ -25,7 +17,6 @@ import {
   SidebarSpacer,
 } from "@/components/catalyst/sidebar";
 import { SidebarLayout } from "@/components/catalyst/sidebar-layout";
-import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/16/solid";
 import {
   ArrowTrendingUpIcon,
   HomeIcon,
@@ -36,21 +27,6 @@ import { usePathname } from "next/navigation";
 
 import { DynamicWidget } from "@dynamic-labs/sdk-react-core";
 
-function AccountDropdownMenu({
-  anchor,
-}: {
-  anchor: "top start" | "bottom end";
-}) {
-  return (
-    <DropdownMenu className="min-w-64" anchor={anchor}>
-      <DropdownItem href="#">
-        <ArrowRightStartOnRectangleIcon />
-        <DropdownLabel>Sign out</DropdownLabel>
-      </DropdownItem>
-    </DropdownMenu>
-  );
-}
-
 export function ApplicationLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
@@ -60,12 +36,7 @@ export function ApplicationLayout({ children }: { children: React.ReactNode }) {
         <Navbar>
           <NavbarSpacer />
           <NavbarSection>
-            <Dropdown>
-              <DropdownButton as={NavbarItem}>
-                <Avatar src="/users/erica.jpg" square />
-              </DropdownButton>
-              <AccountDropdownMenu anchor="bottom end" />
-            </Dropdown>
+            <DynamicWidget />
           </NavbarSection>
         </Navbar>
       }
