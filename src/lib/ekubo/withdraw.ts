@@ -2,9 +2,13 @@ import { EKUBO_POSITIONS_CONTRACT_ADDRESS } from "@/constants/ekubo";
 import type { IPosition } from "@/types";
 import type { Wallet } from "@dynamic-labs/sdk-react-core";
 import type { StarknetWalletConnectorType } from "@dynamic-labs/starknet";
-import { type AccountInterface, Call, Contract, num } from "starknet";
+import { type AccountInterface, Call, CallData, Contract, num } from "starknet";
 
-export const withdrawPosition = async (wallet: Wallet, pos: IPosition) => {
+export const withdrawPosition = async (
+  wallet: Wallet,
+  pos: IPosition,
+  liquidity: BigInt
+) => {
   if (!wallet) throw new Error("No wallet provided");
   const starknetConnector = wallet.connector as StarknetWalletConnectorType;
 
@@ -25,16 +29,6 @@ export const withdrawPosition = async (wallet: Wallet, pos: IPosition) => {
     signer as AccountInterface
   );
 
-  //   25%
-  //   [
-  //     "0xb744f05e6f5c67", 51585719905246311n
-  //   ]
-
-  //   100%
-  //   [
-  //     "0x2dd13c179bd719d", 206342879620985245n
-  //   ]
-
   const fees = pos.metadata.attributes.find((attr) => attr.trait_type === "fee")
     ?.value as string;
   const tick_spacing = pos.metadata.attributes.find(
@@ -51,8 +45,10 @@ export const withdrawPosition = async (wallet: Wallet, pos: IPosition) => {
     (attr) => attr.trait_type === "tick_upper"
   )?.value as string;
 
-  const call: Call = await contract.populate("withdraw", [
-    {
+  const withdrawCall: Call = {
+    contractAddress: EKUBO_POSITIONS_CONTRACT_ADDRESS,
+    entrypoint: "withdraw",
+    calldata: CallData.compile({
       id: pos.metadata.id,
       pool_key: {
         token0: pos.token0.l2_token_address,
@@ -71,12 +67,16 @@ export const withdrawPosition = async (wallet: Wallet, pos: IPosition) => {
           mag: num.toHex(tick_upper),
         },
       },
-      liquidity: 0,
+      liquidity,
       min_token0: 0,
       min_token1: 0,
       collect_fees: true,
-    },
-  ]);
+    }),
+  };
 
-  return call;
+  const { transaction_hash } = await signer.execute([withdrawCall]);
+
+  console.log("transaction_hash", transaction_hash);
+
+  return transaction_hash;
 };
