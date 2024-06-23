@@ -1,10 +1,10 @@
 "use client";
 
-import { Wallet } from "@dynamic-labs/sdk-react-core";
-import { StarknetWalletConnectorType } from "@dynamic-labs/starknet";
+import type { Wallet } from "@dynamic-labs/sdk-react-core";
+import type { StarknetWalletConnectorType } from "@dynamic-labs/starknet";
 import sierra from "@/data/titan_TitanAccount.contract_class.json";
 import casm from "@/data/titan_TitanAccount.compiled_contract_class.json";
-import { fetchUserAction, updateUserAction } from "@/actions/user";
+import { fetchUserAction, updateUserAction } from "@/lib/actions/user";
 
 export async function createTitanAccount(wallet: Wallet) {
   if (!wallet) throw new Error("No wallet provided");
